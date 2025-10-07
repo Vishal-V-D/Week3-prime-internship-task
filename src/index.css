@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import "tailwindcss";
+
+.light {
+  --color-bg-primary: 210, 20%, 98%;
+  --color-bg-secondary: 0, 0%, 100%;
+  --color-text-primary: 210, 10%, 20%;
+  --color-text-secondary: 210, 5%, 40%;
+  --color-border: 210, 10%, 80%;
+  --color-accent: 217, 90%, 55%;
+  --color-accent-hover: 217, 80%, 45%;
+  --color-error: 0, 80%, 60%;
+  --gradient-start: hsl(var(--color-accent));
+  --gradient-end: hsl(217, 90%, 65%);
+}
+
+.dark {
+  --color-bg-primary: 240, 5%, 9%;
+  --color-bg-secondary: 240, 5%, 15%;
+  --color-text-primary: 240, 5%, 95%;
+  --color-text-secondary: 240, 5%, 60%;
+  --color-border: 240, 5%, 25%;
+  --color-accent: 217, 90%, 65%;
+  --color-accent-hover: 217, 80%, 55%;
+  --color-error: 0, 80%, 70%;
+  --gradient-start: hsl(var(--color-accent));
+  --gradient-end: hsl(250, 60%, 50%);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  @apply antialiased transition-colors duration-500;
+  background-color: hsl(var(--color-bg-primary));
+  color: hsl(var(--color-text-primary));
+}
+
+.bg-theme-primary { background-color: hsl(var(--color-bg-primary)); }
+.bg-theme-secondary { background-color: hsl(var(--color-bg-secondary)); }
+.text-theme-primary { color: hsl(var(--color-text-primary)); }
+.text-theme-secondary { color: hsl(var(--color-text-secondary)); }
+.border-theme { border-color: hsl(var(--color-border)); }
+
+.button-theme {
+  @apply font-semibold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-[1.02] shadow-xl;
+  background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+  color: hsl(var(--color-bg-primary));
+}
+
+.button-theme:hover {
+  background-image: none;
+  background-color: hsl(var(--color-accent-hover));
+}
+
+.button-error {
+  @apply font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md;
+  background-color: hsl(var(--color-error));
+  color: hsl(var(--color-bg-primary));
+}
+
+
+
+.shadow-3xl {
+    --tw-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px hsla(var(--color-border), 0.5);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.focus\:border-theme-accent:focus {
+    box-shadow: 0 0 0 3px hsla(var(--color-accent), 0.5);
+    border-color: hsl(var(--color-accent));
+}
+
+input::placeholder {
+    color: hsl(var(--color-text-secondary));
+    opacity: 0.7; 
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: translateY(100%) scale(0.8);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(-10%) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes fade-in-slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px); 
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-slide-up {
+  
+    animation: fade-in-slide-up 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards; 
+}
