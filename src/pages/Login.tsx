@@ -37,14 +37,14 @@ export default function Login() {
     setLoading(true);
     try {
       await login(data);
-      showToast("✅ Welcome back! Logging you in...", "success");
+      showToast(" Welcome back! Logging you in...", "success");
     } catch (err: any) {
       const status = err.response?.status;
       let errorMessage = err.response?.data?.message || "Login failed. Please try again.";
       if (status === 400 || status === 401) {
-        errorMessage = "⚠️ Invalid email or password.";
+        errorMessage = " Invalid email or password.";
       } else if (status === 500) {
-        errorMessage = "🚨 Server error. Please try again later.";
+        errorMessage = "Server error. Please try again later.";
       }
       showToast(errorMessage, "error");
     } finally {

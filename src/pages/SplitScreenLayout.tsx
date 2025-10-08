@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
 
 interface SplitScreenLayoutProps {
   formSide: React.ReactNode;
@@ -24,7 +24,7 @@ export const SplitScreenLayout: React.FC<SplitScreenLayoutProps> = ({ formSide, 
 
   const isFormOnLeft = isLogin;
 
-  // Desktop marketing panel
+ 
   const marketingPanel = (
     <div
       className={`w-1/2 hidden md:flex ${cyanPanelClass} ${
@@ -53,14 +53,14 @@ export const SplitScreenLayout: React.FC<SplitScreenLayoutProps> = ({ formSide, 
     </div>
   );
 
-  // Form panel
+ 
   const formPanel = (
     <div
       className={`w-full md:w-1/2 ${whitePanelClass} ${
         isFormOnLeft ? "rounded-l-2xl" : "rounded-r-2xl"
       } max-w-none`}
     >
-      {/* Mobile welcome panel */}
+  
       <div className="flex flex-col md:hidden mb-6 text-center">
         <h2 className="text-3xl font-extrabold mb-2">{marketingContent.title}</h2>
         <p className="text-lg opacity-90">{marketingContent.text}</p>

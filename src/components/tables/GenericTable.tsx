@@ -39,7 +39,7 @@ export interface GenericTableProps<T extends DataItem> {
   isActionPending?: boolean;
 }
 
-// --- Component Implementation ---
+
 
 function GenericTable<T extends DataItem>({
   data,
@@ -68,32 +68,32 @@ function GenericTable<T extends DataItem>({
   const showingFrom = totalItems ? (page - 1) * limit + 1 : 0;
   const showingTo = totalItems ? Math.min(page * limit, totalItems) : 0;
 
-  // Class for a subtle hover or background, based on the primary text color (low opacity)
+  
   const subBgClass = 'bg-[hsla(var(--color-text-primary),0.03)]';
   const subHoverClass = 'hover:bg-[hsla(var(--color-text-primary),0.07)]';
 
 
   return (
     <div className="w-full">
-      {/* Header with Search and Action Button: Stacks vertically on mobile (flex-col) */}
+ 
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
         <div className="relative flex-1">
-          {/* Search Icon: text-theme-secondary */}
+       
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          {/* Search Input is w-full */}
+          
           <input
             type="text"
             placeholder={searchPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            // Custom focus styles from index.css are applied here via arbitrary values
+            
             className={`w-full pl-10 pr-4 py-2.5 bg-theme-secondary border border-theme rounded-lg focus:outline-none focus:ring-2 focus:ring-[hsl(var(--color-accent))] focus:border-[hsl(var(--color-accent-hover))] transition-shadow text-sm text-theme-primary`}
           />
         </div>
         {hasCreateButton && onCreate && (
-          // Create Button: Added w-full on mobile for a better touch target (sm:w-auto restricts it on desktop)
+         
           <button 
             onClick={onCreate} 
             disabled={isActionPending}
@@ -108,28 +108,28 @@ function GenericTable<T extends DataItem>({
         )}
       </div>
 
-      {/* Table Container */}
+ 
       <div className="bg-theme-secondary rounded-xl shadow-sm border border-theme overflow-hidden">
         {isLoading ? (
           <div className="p-4 space-y-3">
-            {/* Loading Skeleton: Use a subtle background for the pulse effect */}
+           
             {[...Array(limit)].map((_, idx) => (
               <div key={idx} className="h-12 bg-[hsla(var(--color-text-primary),0.05)] rounded-lg animate-pulse"></div>
             ))}
           </div>
         ) : (
           <>
-            {/* overflow-x-auto is the key to mobile table responsiveness, enabling horizontal scroll */}
+          
             <div className="overflow-x-auto">
-              {/* min-w-full ensures the table content forces the scroll on small screens if needed */}
+         
               <table className="w-full min-w-full">
                 <thead>
-                  {/* Table Header Row: subBgClass and border-theme */}
+
                   <tr className={`${subBgClass} border-b border-theme`}>
                     {columns.map((col) => (
                       <th
                         key={String(col.key)}
-                        // Added whitespace-nowrap to keep header titles on one line for better scroll alignment
+
                         className={`px-6 py-3.5 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider whitespace-nowrap
                           ${col.isSortable ? 'cursor-pointer select-none transition-colors' : ''}
                           ${col.isSortable ? subHoverClass : ''}
@@ -139,7 +139,7 @@ function GenericTable<T extends DataItem>({
                         <div className="flex items-center gap-2">
                           {col.header}
                           {col.isSortable && sortField === col.key && (
-                            // Sort Indicator: accent color
+                       
                             <span className="text-[hsl(var(--color-accent))]">
                               {sortOrder === "ASC" ? "↑" : "↓"}
                             </span>
@@ -154,11 +154,11 @@ function GenericTable<T extends DataItem>({
                     data.map((item, index) => (
                       <tr 
                         key={item.id || index} 
-                        // Row Hover: Subtle hover class
+                       
                         className={`transition-colors ${subHoverClass}`}
                       >
                         {columns.map((col) => (
-                          // Row Text: text-theme-primary. Added whitespace-nowrap here as well
+                         
                           <td key={String(col.key)} className="px-6 py-4 text-sm text-theme-primary whitespace-nowrap">
                             {col.render(item as T, { FaEdit, FaTrash })}
                           </td>
@@ -169,11 +169,11 @@ function GenericTable<T extends DataItem>({
                     <tr>
                       <td colSpan={columns.length} className="px-6 py-12 text-center">
                         <div className="flex flex-col items-center gap-2">
-                          {/* Empty State Icon: Use border color for subtlety */}
+                        
                           <svg className="w-12 h-12 text-[hsl(var(--color-border))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                           </svg>
-                          {/* Empty State Text: text-theme-secondary */}
+                       
                           <p className="text-theme-secondary font-medium">No items found</p>
                           <p className="text-[hsla(var(--color-text-secondary),0.7)] text-xs">Try adjusting your search or filters</p>
                         </div>
@@ -184,19 +184,16 @@ function GenericTable<T extends DataItem>({
               </table>
             </div>
 
-            {/* Footer with Pagination: Stacks vertically on mobile (flex-col) */}
+          
             {setPage && totalItems !== undefined && totalItems > 0 && (
-              // Footer Background: Subtle background color and border-theme
               <div className={`px-6 py-4 ${subBgClass} border-t border-theme`}>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  {/* Info Text: text-theme-primary */}
                   <p className="text-sm text-theme-primary">
                     Showing <span className="font-medium">{showingFrom}</span> to <span className="font-medium">{showingTo}</span> of{' '}
                     <span className="font-medium">{totalItems}</span> results
                   </p>
                   
                   <div className="flex items-center gap-2">
-                    {/* Previous/Next Button: bg-theme-secondary, border-theme, subtle hover */}
                     <button 
                       disabled={page <= 1} 
                       onClick={() => setPage(page - 1)} 
@@ -218,7 +215,7 @@ function GenericTable<T extends DataItem>({
                           pageNum = page - 2 + idx;
                         }
                         
-                        // Check if the page number is valid before rendering
+                    
                         if (pageNum < 1 || pageNum > totalPages) return null;
 
                         return (
@@ -226,10 +223,10 @@ function GenericTable<T extends DataItem>({
                             key={pageNum}
                             onClick={() => setPage(pageNum)}
                             className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                              // Active Page: accent color background, white text
+                              
                               page === pageNum
                                 ? 'bg-[hsl(var(--color-accent))] text-white'
-                                // Inactive Page: primary text color, subtle hover
+                               
                                 : `text-theme-primary ${subHoverClass}`
                             }`}
                           >

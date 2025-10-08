@@ -43,7 +43,7 @@ export default function Register() {
     setLoading(true);
     try {
       await userService.registerStudent(data);
-      showToast("✅ Account created successfully! Redirecting to login...", "success");
+      showToast("Account created successfully! Redirecting to login...", "success");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err: any) {
       const errorMessage =

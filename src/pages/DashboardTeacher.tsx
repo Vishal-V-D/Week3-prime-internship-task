@@ -10,7 +10,6 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../context/AuthContext";
-// 👇 ORIGINAL SERVICE IMPORTS RESTORED
 import { userService } from "../api/userService";
 import { courseService } from "../api/courseService";
 import { 
@@ -22,10 +21,10 @@ import {
   FaUserGraduate,
   FaBoxes,
   FaTachometerAlt,
-  FaBars, // ADDED for mobile menu toggle
-  FaTimes, // ADDED for mobile menu close icon
+  FaBars, 
+  FaTimes, 
 } from "react-icons/fa";
-import type { IconType } from 'react-icons'; // Import IconType for the navItems array
+import type { IconType } from 'react-icons'; 
 
 interface Student {
   id: number;
@@ -73,9 +72,8 @@ interface Enrollment {
 
 type ActiveSection = 'students' | 'courses' | 'enrollments' | 'recent';
 
-// Define the shape for navigation items to be passed to the Sidebar
 interface NavItem {
-    section: ActiveSection | 'dashboard'; // Using 'dashboard' here to align with Sidebar component expectations for the 'recent' view
+    section: ActiveSection | 'dashboard'; 
     label: string;
     Icon: IconType;
 }
@@ -84,12 +82,11 @@ const teacherNavItems: NavItem[] = [
    
     { section: 'students', label: 'Students', Icon: FaUserGraduate },
     { section: 'courses', label: 'Courses', Icon: FaBookOpen },
-     { section: 'dashboard', label: 'Recents', Icon: FaTachometerAlt }, // Changed 'recent' to 'dashboard' to match Sidebar type
+     { section: 'dashboard', label: 'Recents', Icon: FaTachometerAlt }, 
     { section: 'enrollments', label: 'Enrollments', Icon: FaClipboardList },
 ];
 
 
-// 👇 FIX 1: Make password required in create schema to match resolver type
 const studentCreateSchema = yup.object({
   name: yup.string().required("Name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -122,7 +119,6 @@ const useTeacherDashboard = () => {
   const [isCreatingCourse, setIsCreatingCourse] = useState<boolean>(false);
   
   const [activeSection, setActiveSection] = useState<ActiveSection>('students');
-  // 👇 FIX 5: Remove unused variable warning by actually using it or prefixing with _
   const [_pendingEnrollmentId, setPendingEnrollmentId] = useState<number | null>(null);
 
   const [studentPage, setStudentPage] = useState<number>(1);
@@ -139,18 +135,15 @@ const useTeacherDashboard = () => {
 
   const [enrollmentSearch, setEnrollmentSearch] = useState<string>("");
 
-  // 👇 FIX 3: Check if getStudents supports sorting parameters, if not do client-side sorting
   const studentsQuery = useQuery({
     queryKey: ["students", studentPage, studentLimit, studentSearch, studentSortField, studentSortOrder],
     queryFn: async () => {
-      // Try to pass all parameters - if API doesn't support, it will ignore extra params
       const res = await userService.getStudents(studentSearch, studentPage, studentLimit);
       return res.data;
     },
     placeholderData: (previousData) => previousData,
   });
   
-  // Client-side sorting if API doesn't support it
   const sortedStudents = useMemo(() => {
     if (!studentsQuery.data?.users) return [];
     const users = [...studentsQuery.data.users];
@@ -204,7 +197,6 @@ const useTeacherDashboard = () => {
   const rawData = coursesQuery.data || {};
   const allCourses = (rawData.data || rawData.courses || []) as Course[];
   
-  // Client-side sorting for courses
   const sortedCourses = useMemo(() => {
     if (!allCourses.length) return [];
     const coursesArray = [...allCourses];
@@ -256,7 +248,7 @@ const useTeacherDashboard = () => {
   const createStudentMutation = useMutation({
     mutationFn: (data: StudentFormValues) => userService.registerStudent(data),
     onSuccess: () => {
-      toast.success("Student created successfully! 🧑‍🎓");
+      toast.success("Student created successfully!");
       queryClient.invalidateQueries({ queryKey: ["students"] });
       setIsCreatingStudent(false);
       resetCreateStudent();
@@ -267,7 +259,7 @@ const useTeacherDashboard = () => {
   const updateStudentMutation = useMutation({
     mutationFn: (data: StudentFormValues) => userService.update(currentStudent!.id, data),
     onSuccess: () => {
-      toast.success("Student updated successfully! ✅");
+      toast.success("Student updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["students"] });
       setIsEditingStudent(false);
       setCurrentStudent(null);
@@ -278,7 +270,7 @@ const useTeacherDashboard = () => {
   const deleteStudentMutation = useMutation({
     mutationFn: (id: number) => userService.delete(id),
     onSuccess: () => {
-      toast.info("Student deleted. 🗑️");
+      toast.info("Student deleted.");
       queryClient.invalidateQueries({ queryKey: ["students"] });
     },
     onError: (err: any) => toast.error(err?.response?.data?.message || "Failed to delete student."),
@@ -287,7 +279,7 @@ const useTeacherDashboard = () => {
   const createCourseMutation = useMutation({
     mutationFn: (data: CourseFormValues) => courseService.createCourse({ ...data, duration: Number(data.duration) }),
     onSuccess: () => {
-      toast.success("Course created successfully! 📘");
+      toast.success("Course created successfully!");
       queryClient.invalidateQueries({ queryKey: ["courses"] });
       setIsCreatingCourse(false);
       resetCreateCourse();
@@ -298,7 +290,7 @@ const useTeacherDashboard = () => {
   const updateCourseMutation = useMutation({
     mutationFn: (data: CourseFormValues) => courseService.updateCourse(currentCourse!.id, { ...data, duration: Number(data.duration) }),
     onSuccess: () => {
-      toast.success("Course updated successfully! ✏️");
+      toast.success("Course updated successfully! ");
       queryClient.invalidateQueries({ queryKey: ["courses"] });
       setIsEditingCourse(false);
       setCurrentCourse(null);
@@ -309,7 +301,7 @@ const useTeacherDashboard = () => {
   const deleteCourseMutation = useMutation({
     mutationFn: (id: number) => courseService.deleteCourse(id),
     onSuccess: () => {
-      toast.info("Course deleted. ❌");
+      toast.info("Course deleted.");
       queryClient.invalidateQueries({ queryKey: ["courses"] });
       queryClient.invalidateQueries({ queryKey: ["enrollments"] });
     },
@@ -319,7 +311,7 @@ const useTeacherDashboard = () => {
   const deleteEnrollmentMutation = useMutation({
     mutationFn: (id: number) => courseService.deleteEnrollment(id),
     onSuccess: () => {
-      toast.info("Enrollment removed. 🚫");
+      toast.info("Enrollment removed.");
       queryClient.invalidateQueries({ queryKey: ["enrollments"] });
       queryClient.invalidateQueries({ queryKey: ["courses"] });
     },
@@ -334,7 +326,6 @@ const useTeacherDashboard = () => {
     setIsEditingStudent(true);
   };
   const handleCreateStudentSubmit = (data: StudentFormValues) => createStudentMutation.mutate(data);
-  // Type fix: Ensure optional password is handled correctly for update
   const handleEditStudentSubmit = (data: StudentFormValues) => {
       const updateData = {
           name: data.name,
@@ -358,13 +349,7 @@ const useTeacherDashboard = () => {
     if (confirm("Are you sure you want to delete this course?")) deleteCourseMutation.mutate(id);
   };
   
-  // 👇 FIX 2: Comment out or remove handleEnroll if enrollStudent doesn't exist
-  /*
-  const handleEnroll = (courseId: number) => {
-    enrollMutation.mutate(courseId);
-  }
-  */
-  
+ 
   const handleDeleteEnrollment = (id: number) => {
     if (confirm("Are you sure you want to delete this enrollment?")) deleteEnrollmentMutation.mutate(id);
   };
@@ -422,7 +407,6 @@ const useTeacherDashboard = () => {
     resolver: yupResolver(courseSchema) as any,
   });
 
-  // 👇 ADDED SETTERS FOR SEARCH/FILTERING LOGIC BACK TO THE RETURN OBJECT
   return {
     user,
     activeSection, setActiveSection,
@@ -439,16 +423,13 @@ const useTeacherDashboard = () => {
     recentStudents, recentCourses,
 
     studentPage, setStudentPage, studentLimit,
-    // Restored student search setters
     studentSearch, setStudentSearch, 
     studentSortField, studentSortOrder, handleSortStudent,
 
     coursePage, setCoursePage, courseLimit, 
-    // Restored course search setters
     courseSearch, setCourseSearch, 
     courseSortField, courseSortOrder, handleSortCourse,
     
-    // Restored enrollment search setters
     enrollmentSearch, setEnrollmentSearch, 
 
     createStudentMutation, updateStudentMutation, deleteStudentMutation,
@@ -466,35 +447,34 @@ const useTeacherDashboard = () => {
   };
 };
 
-// 👇 UPDATED IMPORTS to the components directory
 import Sidebar from "../components/Sidebar"; 
 import Content from "../components/Content";
 import Modals from "../components/Modal"; 
 
 export default function DashboardTeacher() {
   const state = useTeacherDashboard();
-  // State for mobile sidebar visibility
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
-  // Logic to handle the 'recent' view mapping to the Sidebar's 'dashboard' type
+ 
   const currentViewLabel = teacherNavItems.find(item => item.section === state.activeSection || (item.section === 'dashboard' && state.activeSection === 'recent'))?.label || 'Dashboard';
   const activeSectionForSidebar = state.activeSection === 'recent' ? 'dashboard' : state.activeSection;
 
   return (
-    // The main container includes the flex layout and min-height
+   
     <div className="flex bg-theme-primary min-h-screen">
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
       
-      {/* ---------------- MOBILE OVERLAY SIDEBAR ---------------- */}
+   
       <div 
         className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-        // Overlay to close sidebar when clicked outside
+       
         onClick={() => setIsSidebarOpen(false)}
       >
-        {/* Actual sidebar panel that slides in */}
+       
         <div 
           className={`fixed inset-y-0 left-0 w-64 bg-theme-secondary shadow-2xl transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-          // Prevents closing when clicking on the sidebar itself
+         
           onClick={(e) => e.stopPropagation()}
         >
           <Sidebar
@@ -504,14 +484,14 @@ export default function DashboardTeacher() {
             setActiveSection={(section: string) => {
                 const newSection = section === 'dashboard' ? 'recent' : section;
                 state.setActiveSection(newSection as ActiveSection);
-                setIsSidebarOpen(false); // Close on selection
+                setIsSidebarOpen(false); 
             }}
             FaBoxes={FaBoxes} 
           />
         </div>
       </div>
       
-      {/* ---------------- DESKTOP SIDEBAR ---------------- */}
+ 
       <div className="hidden lg:block">
         <Sidebar
           role="Teacher"
@@ -527,7 +507,6 @@ export default function DashboardTeacher() {
 
       <main className="flex-1 p-4 md:p-8 overflow-y-auto">
         
-        {/* ---------------- MOBILE HEADER WITH TOGGLE ---------------- */}
         <div className="flex justify-between items-center mb-6 lg:hidden border-b pb-4">
           <h1 className="text-2xl font-extrabold text-gray-800">
             {currentViewLabel}
@@ -541,7 +520,6 @@ export default function DashboardTeacher() {
           </button>
         </div>
         
-        {/* ---------------- DESKTOP HEADER ---------------- */}
         <div className="hidden lg:flex justify-between items-center mb-8">
           <h1 className="text-4xl font-extrabold text-theme-primary">
             {currentViewLabel} Management Portal 👨‍🏫

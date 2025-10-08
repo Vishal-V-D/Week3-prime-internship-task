@@ -1,5 +1,5 @@
 import React ,{ useContext, useEffect, useState, useMemo, useCallback,type InputHTMLAttributes } from "react";
-import { useForm, type SubmitHandler, type UseFormRegister } from "react-hook-form"; // Added SubmitHandler, corrected import
+import { useForm, type SubmitHandler, type UseFormRegister } from "react-hook-form"; 
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -10,7 +10,7 @@ import type { IconType } from 'react-icons';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Assuming these components and services are correctly defined elsewhere
+
 import Sidebar from "../components/Sidebar"; 
 import { AuthContext } from "../context/AuthContext";
 import { userService } from "../api/userService"; 
@@ -19,7 +19,6 @@ import GenericTable from "../components/tables/GenericTable";
 import type { Column } from "../components/tables/GenericTable";
 import { ModalWrapper } from "../components/Modal";
 
-// --- TYPES REFINEMENT ---
 
 type DashboardView = 'analytics' | 'manage_teachers' | 'manage_students';
 
@@ -53,7 +52,7 @@ interface Student {
 
 type SortOrder = 'ASC' | 'DESC';
 
-// Base interface for user forms (used for updating which allows optional fields)
+
 interface UserFormBase {
   name: string;
   email: string;
@@ -61,23 +60,21 @@ interface UserFormBase {
   specialization?: string;
 }
 
-// Dedicated form types to strictly match the yup schemas
-// 1. Student Creation: password is REQUIRED
 interface StudentCreateFormValues extends Omit<UserFormBase, 'specialization'> {
-  password: string; // Must be required to match the schema
+  password: string; 
 }
 
-// 2. Student Edit: password is optional/nullable
+
 interface StudentEditFormValues extends Omit<UserFormBase, 'specialization'> {
   password?: string;
 }
 
-// 3. Teacher Creation: password is REQUIRED, specialization is optional
+
 interface TeacherCreateFormValues extends UserFormBase {
-  password: string; // Must be required to match the schema
+  password: string; 
 }
 
-// 4. Teacher Edit: password and specialization are optional
+
 interface TeacherEditFormValues extends UserFormBase {}
 
 
@@ -88,9 +85,7 @@ interface CourseAnalytics {
   enrollmentsByCategory: { category: string; count: string | number }[];
 }
 
-// --- YUP SCHEMAS ---
 
-// Casted to ObjectSchema to fix yupResolver type error (Error 2345, 2322)
 const studentSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -100,7 +95,7 @@ const studentSchema = yup.object().shape({
 const studentEditSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
-  // password is nullable/optional here to match the type StudentEditFormValues
+
   password: yup.string()
     .transform(value => value === '' ? undefined : value)
     .min(6, "Password must be at least 6 characters")
@@ -127,7 +122,6 @@ const teacherEditSchema = yup.object().shape({
 }) as yup.ObjectSchema<TeacherEditFormValues>;
 
 
-// --- DASHBOARD ADMIN COMPONENT ---
 
 export default function DashboardAdmin() {
   const { user } = useContext(AuthContext)!;
@@ -168,8 +162,7 @@ export default function DashboardAdmin() {
 
   const [error, setError] = useState<string | null>(null);
 
-  // --- useForm hooks updated with specific types ---
-  
+
   const { register: registerStudentForm, handleSubmit: handleSubmitStudent, reset: resetStudentForm, formState: { errors: studentErrors },} = useForm<StudentCreateFormValues>({ resolver: yupResolver(studentSchema), mode: 'onSubmit', });
   const { register: registerEditStudentForm, handleSubmit: handleSubmitEditStudent, reset: resetEditStudentForm, setValue: setEditStudentValue, formState: { errors: editStudentErrors },} = useForm<StudentEditFormValues>({ resolver: yupResolver(studentEditSchema), mode: 'onSubmit', });
   const { register: registerTeacherForm, handleSubmit: handleSubmitTeacher, reset: resetTeacherForm, formState: { errors: teacherErrors },} = useForm<TeacherCreateFormValues>({ resolver: yupResolver(teacherCreateSchema), mode: 'onSubmit', });
@@ -263,12 +256,12 @@ export default function DashboardAdmin() {
   }, [studentSearch, studentPage, studentLimit, studentSortField, studentSortOrder]);
 
 
-  // onSubmit handlers updated with specific form data types
+ 
   const onCreateStudent: SubmitHandler<StudentCreateFormValues> = async (data) => {
     try {
-      // data type is StudentCreateFormValues which guarantees 'password' is present
+      
       await userService.registerStudent(data); 
-      toast.success("Student created successfully! 🎓"); 
+      toast.success("Student created successfully!"); 
       fetchAnalytics();
       fetchStudents(); 
       fetchRecentUsers(); 
@@ -285,14 +278,14 @@ export default function DashboardAdmin() {
     setCurrentStudent(student);
     setEditStudentValue("name", student.name);
     setEditStudentValue("email", student.email);
-    setEditStudentValue("password", ""); // Set to empty string for placeholder/optional input
+    setEditStudentValue("password", ""); 
     setIsEditingStudent(true);
   };
   
   const onUpdateStudent: SubmitHandler<StudentEditFormValues> = async (data) => {
     if (!currentStudent) return;
     
-    // data type is StudentEditFormValues, password is optional
+ 
     const updateData = {
       name: data.name,
       email: data.email,
@@ -317,7 +310,7 @@ export default function DashboardAdmin() {
   const handleDeleteStudent = async (id: number) => {
     try {
       await userService.delete(id);
-      toast.success("Student deleted successfully! 🗑️"); 
+      toast.success("Student deleted successfully! "); 
       fetchStudents();
       fetchAnalytics();
       fetchRecentUsers();
@@ -332,13 +325,13 @@ export default function DashboardAdmin() {
   const onCreateTeacher: SubmitHandler<TeacherCreateFormValues> = async (formData) => {
     const dataToSend = {
       ...formData,
-      specialization: formData.specialization?.trim() || undefined, // specialization is optional on the backend
+      specialization: formData.specialization?.trim() || undefined, 
     };
     
     try {
-      // formData type is TeacherCreateFormValues which guarantees 'password' is present
+     
       await userService.registerTeacher(dataToSend);
-      toast.success("Teacher created successfully! 👨‍🏫"); 
+      toast.success("Teacher created successfully! "); 
       fetchAnalytics();
       fetchTeachers(); 
       fetchRecentUsers(); 
@@ -363,7 +356,7 @@ export default function DashboardAdmin() {
   const onUpdateTeacher: SubmitHandler<TeacherEditFormValues> = async (data) => {
     if (!currentTeacher) return;
     
-    // data type is TeacherEditFormValues
+  
     const updateData = {
       name: data.name,
       email: data.email,
@@ -389,7 +382,7 @@ export default function DashboardAdmin() {
   const handleDeleteTeacher = async (id: number) => {
     try {
       await userService.delete(id);
-      toast.success("Teacher deleted successfully! 🗑️"); 
+      toast.success("Teacher deleted successfully!"); 
       fetchTeachers();
       fetchAnalytics();
       fetchRecentUsers();
@@ -437,7 +430,7 @@ export default function DashboardAdmin() {
   }, [activeView, studentSearch, studentPage, studentSortField, studentSortOrder, fetchStudents]);
 
 
-  // Table columns definition is fine as Teacher and Student types are correct
+ 
   const teacherColumns: Column<Teacher>[] = useMemo(() => [
     { key: 'name', header: 'Name', isSortable: true, render: (t) => <span className="font-medium">{t.name}</span>, },
     { key: 'email', header: 'Email', isSortable: true, render: (t) => <span>{t.email}</span>, },
@@ -501,7 +494,7 @@ export default function DashboardAdmin() {
     const validRecentStudents = Array.isArray(recentStudents) ? recentStudents : [];
     const validRecentTeachers = Array.isArray(recentTeachers) ? recentTeachers : [];
 
-    // Sorting logic is fine, ensured recentStudents/Teachers are arrays
+   
     const sortedRecentStudents = validRecentStudents.slice().sort(
       (a, b) => new Date(b.createdAt || "").getTime() - new Date(a.createdAt || "").getTime()
     );
@@ -512,7 +505,7 @@ export default function DashboardAdmin() {
 
     return (
       <>
-        {/* --- MODERN STATS CARD GRID WITH HOVER EFFECT --- */}
+    
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="p-4 bg-theme-secondary rounded-xl shadow-lg flex flex-col items-start justify-center hover:shadow-xl transition-all duration-300">
             <FaUserGraduate className="text-3xl text-blue-500 mb-2" />
@@ -538,7 +531,7 @@ export default function DashboardAdmin() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           
-          {/* Chart 1: Total Users Overview (Bar Chart) */}
+      
           <div className="bg-theme-secondary p-6 rounded-2xl shadow-xl h-96 hover:shadow-xl transition-all duration-300 md:col-span-1 lg:col-span-1">
             <h2 className="text-xl font-bold mb-4 text-theme-primary">Total Users Overview</h2>
             <ResponsiveContainer width="100%" height="85%">
@@ -559,7 +552,7 @@ export default function DashboardAdmin() {
             </ResponsiveContainer>
           </div>
 
-          {/* Chart 2: Enrollments by Category (Pie Chart) */}
+       
           <div className="bg-theme-secondary p-2 rounded-2xl shadow-xl h-96 hover:shadow-xl transition-all duration-300 md:col-span-1 lg:col-span-1">
             <h2 className="text-xl font-bold mb-4 text-theme-primary">Enrollments by Category</h2>
             {courseAnalytics?.enrollmentsByCategory.length ? (
@@ -590,9 +583,7 @@ export default function DashboardAdmin() {
             )}
           </div>
 
-          {/* Chart 3: Top Enrollments by Course (Horizontal Bar Chart) 
-              **Crucial Change for De-congestion:** This chart spans 2 columns on medium screens (`md:col-span-2`), giving it much more horizontal room for labels and reducing the feeling of clutter.
-          */}
+        
           <div className="bg-theme-secondary p-6 rounded-2xl shadow-xl h-96 hover:shadow-xl transition-all duration-300 md:col-span-2 lg:col-span-1">
             <h2 className="text-xl font-bold mb-4 text-theme-primary">Top Enrollments by Course</h2>
             {courseAnalytics?.enrollmentsByCourse.length ? (
@@ -604,7 +595,7 @@ export default function DashboardAdmin() {
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                   <XAxis type="number" allowDecimals={false} stroke="#555" />
-                  {/* YAxis width is set higher to ensure course titles fit better on tablet/desktop */}
+               
                   <YAxis dataKey="courseTitle" type="category" width={120} stroke="#555" /> 
                   <Tooltip />
                   <Legend />
@@ -616,8 +607,7 @@ export default function DashboardAdmin() {
             )}
           </div>
         </div>
-        
-        {/* RECENT USERS: Default 1 column, Medium/Large 3 columns */}
+   
         {sortedRecentStudents.length > 0 && (
           <div className="mt-8">
             <h2 className="text-2xl font-bold mb-4 text-theme-primary">Recently Added Students</h2>
@@ -654,7 +644,7 @@ export default function DashboardAdmin() {
   const renderManageTeachersView = () => (
     <div className="mb-8">
       <h2 className="text-3xl font-bold mb-4 text-theme-primary">Manage Teachers</h2>
-      <GenericTable<Teacher> // Explicitly typed GenericTable
+      <GenericTable<Teacher> 
         data={teachers}
         columns={teacherColumns}
         isLoading={isLoadingTeachers}
@@ -682,7 +672,7 @@ export default function DashboardAdmin() {
   const renderManageStudentsView = () => (
     <div className="mb-8">
       <h2 className="text-3xl font-bold mb-4 text-theme-primary">Manage Students</h2>
-      <GenericTable<Student> // Explicitly typed GenericTable
+      <GenericTable<Student> 
         data={students}
         columns={studentColumns}
         isLoading={isLoadingStudents}
@@ -724,7 +714,7 @@ export default function DashboardAdmin() {
 
   return (
     <div className="flex bg-theme-primary min-h-screen">
-      {/* Mobile Overlay Sidebar - conditionally rendered */}
+     
       <div 
         className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setIsSidebarOpen(false)}
@@ -732,23 +722,23 @@ export default function DashboardAdmin() {
         <div className={`fixed inset-y-0 left-0 w-64 bg-theme-secondary shadow-2xl transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             <Sidebar
                 role="Admin"
-                // Type assertion here to satisfy Sidebar's expected navItems structure
+            
                 navItems={adminNavItems as NavItem[]} 
                 activeSection={activeView}
                 setActiveSection={(section: string) => {
                   setActiveView(section as DashboardView);
-                  setIsSidebarOpen(false); // Close on selection
+                  setIsSidebarOpen(false); 
                 }}
                 FaBoxes={FaBoxes}
             />
         </div>
       </div>
 
-      {/* Desktop Sidebar - always visible */}
+    
       <div className="hidden lg:block">
         <Sidebar
           role="Admin"
-          // Type assertion here to satisfy Sidebar's expected navItems structure
+        
           navItems={adminNavItems as NavItem[]} 
           setActiveSection={setActiveView as (section: string) => void}
           activeSection={activeView}
@@ -757,7 +747,7 @@ export default function DashboardAdmin() {
       </div>
 
       <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-        {/* Mobile Header with Toggle */}
+  
         <div className="flex justify-between items-center mb-6 lg:hidden border-b pb-4">
           <h1 className="text-2xl font-extrabold text-theme-primary">
             {currentViewLabel}
@@ -771,7 +761,7 @@ export default function DashboardAdmin() {
           </button>
         </div>
 
-        {/* Desktop Header */}
+       
         <div className="hidden lg:flex justify-between items-center mb-8">
           <h1 className="text-4xl font-extrabold text-theme-primary">
             {currentViewLabel}
@@ -784,7 +774,7 @@ export default function DashboardAdmin() {
       {isCreatingStudent && (
         <ModalWrapper isOpen={isCreatingStudent} onClose={() => {setIsCreatingStudent(false); resetStudentForm();}} title="Create New Student">
           <form onSubmit={handleSubmitStudent(onCreateStudent)} noValidate>
-            {/* registerStudentForm is UseFormRegister<StudentCreateFormValues> */}
+           
             <InputField label="Name" {...registerStudentForm("name")} error={studentErrors.name?.message} />
             <InputField label="Email" type="email" {...registerStudentForm("email")} error={studentErrors.email?.message} />
             <InputField label="Password" type="password" {...registerStudentForm("password")} error={studentErrors.password?.message} />
@@ -796,7 +786,7 @@ export default function DashboardAdmin() {
       {isEditingStudent && currentStudent && (
         <ModalWrapper isOpen={isEditingStudent} onClose={() => {setIsEditingStudent(false); setCurrentStudent(null); resetEditStudentForm();}} title={`Edit Student: ${currentStudent.name}`}>
           <form onSubmit={handleSubmitEditStudent(onUpdateStudent)} noValidate>
-             {/* registerEditStudentForm is UseFormRegister<StudentEditFormValues> */}
+           
             <InputField label="Name" {...registerEditStudentForm("name")} error={editStudentErrors.name?.message} />
             <InputField label="Email" type="email" {...registerEditStudentForm("email")} error={editStudentErrors.email?.message} />
             <InputField label="New Password (optional)" type="password" {...registerEditStudentForm("password")} error={editStudentErrors.password?.message} placeholder="Leave blank to keep current password" />
@@ -808,7 +798,7 @@ export default function DashboardAdmin() {
       {isCreatingTeacher && (
         <ModalWrapper isOpen={isCreatingTeacher} onClose={() => {setIsCreatingTeacher(false); resetTeacherForm();}} title="Create New Teacher">
           <form onSubmit={handleSubmitTeacher(onCreateTeacher)} noValidate>
-            {/* registerTeacherForm is UseFormRegister<TeacherCreateFormValues> */}
+         
             <InputField label="Name" {...registerTeacherForm("name")} error={teacherErrors.name?.message} />
             <InputField label="Email" type="email" {...registerTeacherForm("email")} error={teacherErrors.email?.message} />
             <InputField label="Password" type="password" {...registerTeacherForm("password")} error={teacherErrors.password?.message} />
@@ -821,7 +811,7 @@ export default function DashboardAdmin() {
       {isEditingTeacher && currentTeacher && (
         <ModalWrapper isOpen={isEditingTeacher} onClose={() => {setIsEditingTeacher(false); setCurrentTeacher(null); resetEditTeacherForm();}} title={`Edit Teacher: ${currentTeacher.name}`}>
           <form onSubmit={handleSubmitEditTeacher(onUpdateTeacher)} noValidate>
-            {/* registerEditTeacherForm is UseFormRegister<TeacherEditFormValues> */}
+        
             <InputField label="Name" {...registerEditTeacherForm("name")} error={editTeacherErrors.name?.message} />
             <InputField label="Email" type="email" {...registerEditTeacherForm("email")} error={editTeacherErrors.email?.message} />
             <InputField label="Specialization" {...registerEditTeacherForm("specialization")} error={editTeacherErrors.specialization?.message} />
@@ -836,19 +826,13 @@ export default function DashboardAdmin() {
   );
 }
 
-// --- InputField and ModalButtons Components (Corrected) ---
-
-// InputFieldProps now correctly extends InputHTMLAttributes<HTMLInputElement>
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
-  // UseFormRegisterReturn is now correctly inferred from the ...props spread, 
-  // no need to explicitly add it here unless you want to type its usage further.
+  
 }
 
-// The spread props {...props} must include the return of react-hook-form's register, which
-// is why we use React.forwardRef. The ref type is HTMLInputElement.
-// The props include 'name', 'onBlur', 'onChange', and 'ref' from the register call.
+
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
   ({ label, type = "text", error, placeholder, ...props }, ref) => (
   <div className="mb-4">
@@ -857,7 +841,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       type={type}
       className={`w-full bg-theme-primary text-theme-primary border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
       placeholder={placeholder}
-      ref={ref} // Forwarded ref receives the register return ref
+      ref={ref} 
       {...props}
     />
     {error && <p className="text-red-500 text-sm mt-1">{error}</p>}

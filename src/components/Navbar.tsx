@@ -29,7 +29,7 @@ export default function Navbar() {
     return "/dashboard/student";
   };
 
-  // Define nav items based on user login
+
   const navItems = user
     ? [
         { label: "Dashboard", to: getDashboardPath(), icon: FaTachometerAlt },
@@ -46,7 +46,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-theme-secondary shadow-md transition-colors duration-500 text-theme-primary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+      
           <Link
             to="/"
             className="text-2xl font-extrabold text-cyan-600 hover:text-cyan-500 transition-colors duration-300"
@@ -54,9 +54,9 @@ export default function Navbar() {
             SmartLearn
           </Link>
 
-          {/* Right section */}
+    
           <div className="flex items-center space-x-4">
-            {/* Theme Toggle */}
+          
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full bg-cyan-100 dark:bg-gray-700 hover:bg-cyan-200 dark:hover:bg-gray-600 transition duration-300 text-cyan-600 dark:text-gray-200"
@@ -65,7 +65,7 @@ export default function Navbar() {
               {theme === "light" ? <FaSun size={18} /> : <FaMoon size={18} />}
             </button>
 
-            {/* Desktop menu */}
+         
             <div className="hidden md:flex items-center space-x-2">
               {navItems.map((item, index) =>
                 item.to ? (
@@ -88,7 +88,7 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Mobile menu */}
+         
             <div className="md:hidden relative">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}

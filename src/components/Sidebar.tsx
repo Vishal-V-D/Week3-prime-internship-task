@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         collapsed ? "w-20" : "w-64"
       } bg-theme-secondary text-theme-primary shadow-3xl flex flex-col h-screen sticky top-0 p-4 border-r border-theme transition-all duration-500 ease-in-out`}
     >
-      {/* HEADER */}
+     
       <div className="flex items-center justify-between mb-10">
         <div
           className={`flex items-center gap-2 ${
@@ -80,7 +80,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
 
-      {/* NAVIGATION */}
       <ul className="space-y-3 flex-1">
         {navItems.map(({ section, label, Icon: IconComponent }) => {
           const isActive = activeSection === section;
@@ -106,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         })}
       </ul>
 
-      {/* FOOTER */}
+  
       <div
         className={`mt-auto pt-6 border-t border-theme ${
           collapsed ? "text-center" : ""

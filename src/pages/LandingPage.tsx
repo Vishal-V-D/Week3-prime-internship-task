@@ -2,38 +2,26 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useCallback } from 'react';
 import studentImage from "../assets/image.png";
 
-// --- TYPES AND INTERFACES ---
-
-/** Defines the structure for a single testimonial object. */
 interface Testimonial {
     quote: string;
     author: string;
 }
 
-/** Defines the structure for the FeatureCard props. */
 interface FeatureCardProps {
     icon: string;
     title: string;
     desc: string;
 }
 
-/** Defines the structure for the Section component props. */
 interface SectionProps {
     children: React.ReactNode;
     className?: string;
 }
 
-/** Defines the structure for the TestimonialCarousel props. */
 interface TestimonialCarouselProps {
     testimonials: Testimonial[];
 }
 
-// --- HELPER COMPONENTS ---
-
-/**
- * Helper component for simple structural divisions.
- * Ensures max width and consistent padding.
- */
 const Section: React.FC<SectionProps> = ({ children, className = "" }) => (
   <section className={`w-full py-16 md:py-24 ${className}`}>
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -42,9 +30,6 @@ const Section: React.FC<SectionProps> = ({ children, className = "" }) => (
   </section>
 );
 
-/**
- * Custom Feature Card Component (Simple, clean design).
- */
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, desc }) => (
     <div
         className="p-6 bg-theme-secondary rounded-xl shadow-md border border-theme transform transition duration-300 hover:scale-[1.02] hover:shadow-lg"
@@ -55,27 +40,22 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, desc }) => (
     </div>
 );
 
-/**
- * Testimonial Carousel Component (Moving Carousel with auto-scroll and manual controls).
- */
 const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isHovering, setIsHovering] = useState(false);
     
     const totalTestimonials = testimonials.length;
 
-    // Function to move to the next slide, wrapped in useCallback for useEffect dependency stability
     const nextSlide = useCallback(() => {
         setCurrentIndex((prevIndex) => 
             prevIndex === totalTestimonials - 1 ? 0 : prevIndex + 1
         );
     }, [totalTestimonials]);
 
-    // Auto-scroll effect - cleans up interval on unmount or dependency change
     useEffect(() => {
         if (isHovering || totalTestimonials === 0) return;
 
-        const interval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        const interval = setInterval(nextSlide, 5000); 
         return () => clearInterval(interval);
     }, [nextSlide, isHovering, totalTestimonials]);
 
@@ -88,7 +68,6 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
         );
     };
     
-    // Prevents rendering carousel if there are no testimonials
     if (totalTestimonials === 0) {
         return null; 
     }
@@ -104,12 +83,10 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
                 {testimonials.map((testimonial, index) => (
-                    // Each testimonial slide takes full width
                     <div 
                         key={index} 
                         className="flex-shrink-0 w-full grid grid-cols-1 md:grid-cols-3 items-center gap-10 p-4"
                     >
-                        {/* Testimonial Quote and Author */}
                         <div className="md:col-span-1 flex items-center justify-center p-4 bg-theme-primary rounded-xl shadow-lg border-l-4 border-cyan-600 min-h-[250px]">
                             <blockquote className="text-left">
                                 <p className="text-xl font-medium italic text-theme-primary mb-4">
@@ -121,7 +98,6 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
                             </blockquote>
                         </div>
                         
-                        {/* Visual/Stat placeholders (Hidden on small screens) */}
                         <div className="hidden md:col-span-2 md:grid grid-cols-2 gap-8">
                              <StatCard value="95%" label="Job Placement Rate" />
                              <StatCard value="4.9/5" label="Satisfaction Score" />
@@ -130,7 +106,6 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
                 ))}
             </div>
 
-            {/* Navigation Dots */}
             <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
                 {testimonials.map((_, index) => (
                     <button
@@ -144,7 +119,6 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
                 ))}
             </div>
 
-            {/* Navigation Arrows (Hidden unless mouse is hovering for a cleaner look) */}
             <ArrowButton 
                 direction="prev" 
                 onClick={prevSlide}
@@ -159,7 +133,6 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
     );
 };
 
-// Simple reusable component for the stat cards inside the carousel
 const StatCard: React.FC<{ value: string, label: string }> = ({ value, label }) => (
      <div className="bg-theme-primary p-8 rounded-xl shadow-inner border border-theme flex flex-col justify-center items-center">
         <p className="text-5xl font-extrabold text-cyan-600 dark:text-cyan-400 mb-2">{value}</p>
@@ -167,7 +140,6 @@ const StatCard: React.FC<{ value: string, label: string }> = ({ value, label }) 
     </div>
 );
 
-// Simple reusable component for the carousel arrows
 const ArrowButton: React.FC<{ direction: 'prev' | 'next', onClick: () => void, className: string }> = ({ direction, onClick, className }) => (
      <button 
         onClick={onClick}
@@ -179,11 +151,15 @@ const ArrowButton: React.FC<{ direction: 'prev' | 'next', onClick: () => void, c
 );
 
 
-// --- MAIN LANDING PAGE COMPONENT ---
+const StatPillar: React.FC<{ value: string, label: string }> = ({ value, label }) => (
+    <div className="p-4">
+        <h3 className="text-5xl font-extrabold text-cyan-600 dark:text-cyan-400 mb-2">{value}</h3>
+        <p className="text-lg text-theme-primary font-semibold">{label}</p>
+    </div>
+);
 
 export default function LandingPage() {
   
-  // Helper function for placeholder images
   const courseCategoryUrl = (category: string) => 
     `https://placehold.co/400x250/374151/FFFFFF?text=${category.replace(/ /g, '+')}`;
 
@@ -197,11 +173,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-theme-primary transition-colors duration-500 flex flex-col items-center">
     
-     {/* 1. HERO SECTION */}
      <Section className="!py-10 lg:!py-10 bg-theme-secondary shadow-lg border-b border-theme">
         <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-12 lg:gap-20">
 
-            {/* Left Text Section */}
             <div className="animate-slideInFromTop text-left pt-[88px]">
                 <p className="text-xl font-medium text-theme-secondary mb-3 tracking-widest uppercase">
                     Smart-learning
@@ -216,10 +190,10 @@ export default function LandingPage() {
                     Power up your career with cutting-edge courses, top mentors, and flexible learning built for tomorrow’s leaders.
                 </p>
 
-                <div className="flex space-x-4">
+                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                     <Link
                         to="/register"
-                        className="px-8 py-3 text-lg font-bold text-white 
+                        className="w-full sm:w-auto px-8 py-3 text-lg text-center font-bold text-white 
                                 bg-cyan-600 rounded-lg 
                                 shadow-md transform transition duration-300 hover:scale-[1.03] hover:bg-cyan-700"
                     >
@@ -228,7 +202,7 @@ export default function LandingPage() {
 
                     <Link
                         to="/courses"
-                        className="px-8 py-3 text-lg font-bold rounded-lg 
+                        className="w-full sm:w-auto px-8 py-3 text-lg text-center font-bold rounded-lg 
                                 border-2 border-theme text-theme-primary bg-transparent 
                                 transform transition duration-300 hover:scale-[1.03] hover:border-cyan-600 hover:text-cyan-600"
                     >
@@ -237,9 +211,7 @@ export default function LandingPage() {
                 </div>
             </div>
 
-            {/* Right Image Section */}
             <div className="relative flex justify-center items-center h-full min-h-[300px] lg:min-h-0 pt-[70px]">
-                {/* Cyan blob background for visual interest */}
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-30 w-[600px] h-[600px] lg:w-[800px] lg:h-[900px] pointer-events-none z-0">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                         <defs>
@@ -258,13 +230,11 @@ export default function LandingPage() {
                     </svg>
                 </div>
 
-                {/* Student image */}
                 <img
                     src={studentImage}
                     alt="A smiling student pointing up and holding a book"
-                    className="relative z-10 w-full max-w-md h-auto animate-zoomIn rounded-br-3xl "
+                    className="relative z-10 w-full max-w-sm sm:max-w-md h-auto animate-zoomIn rounded-br-3xl "
                     onError={(e) => {
-                        // Fallback image source on error
                         e.currentTarget.src = "https://placehold.co/400x400/00FFFF/000000?text=Visual+Placeholder";
                     }}
                 />
@@ -272,7 +242,6 @@ export default function LandingPage() {
         </div>
     </Section>
 
-     {/* 2. TRUSTED BY SECTION */}
      <Section className="!py-10 bg-theme-primary">
         <h2 className="text-center text-xl font-semibold text-theme-secondary mb-8 uppercase tracking-widest">
             Trusted by Leaders in Education and Industry
@@ -286,7 +255,6 @@ export default function LandingPage() {
         </div>
      </Section>
 
-    {/* 3. FEATURE CARDS SECTION */}
     <Section className="bg-theme-primary">
         <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 text-theme-primary">
           The Smartest Way to Learn
@@ -310,14 +278,12 @@ export default function LandingPage() {
         </div>
     </Section>
      
-    {/* 4. COURSE CATEGORIES SECTION */}
     <Section className="bg-theme-secondary border-y border-theme">
         <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 text-theme-primary">
           Explore High-Demand Course Categories
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            {/* Category Card 1: Data Science */}
             <Link to="/category/data" className="relative overflow-hidden rounded-xl shadow-xl group cursor-pointer border border-theme hover:border-cyan-600 transition duration-500">
                 <img src={courseCategoryUrl('Data Science')} alt="Data Science Category" className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
@@ -327,7 +293,6 @@ export default function LandingPage() {
                 </div>
             </Link>
 
-            {/* Category Card 2: Web Development */}
             <Link to="/category/webdev" className="relative overflow-hidden rounded-xl shadow-xl group cursor-pointer border border-theme hover:border-cyan-600 transition duration-500">
                 <img src={courseCategoryUrl('Web Development')} alt="Web Development Category" className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
@@ -337,7 +302,6 @@ export default function LandingPage() {
                 </div>
             </Link>
 
-            {/* Category Card 3: Business & Management */}
             <Link to="/category/business" className="relative overflow-hidden rounded-xl shadow-xl group cursor-pointer border border-theme hover:border-cyan-600 transition duration-500">
                 <img src={courseCategoryUrl('Business')} alt="Business Category" className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
@@ -349,7 +313,6 @@ export default function LandingPage() {
         </div>
     </Section>
       
-    {/* 5. STATS AND METRICS SECTION */}
     <Section className="bg-theme-primary !py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <StatPillar value="15K+" label="Students Enrolled" />
@@ -359,7 +322,6 @@ export default function LandingPage() {
         </div>
     </Section>
 
-    {/* 6. TESTIMONIAL CAROUSEL SECTION */}
     <Section className="bg-theme-secondary border-t border-b border-theme">
         <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 text-theme-primary">
             Success Stories
@@ -367,7 +329,6 @@ export default function LandingPage() {
         <TestimonialCarousel testimonials={testimonialsData} />
     </Section>
 
-    {/* 7. CTA (CALL-TO-ACTION) SECTION */}
     <Section className="bg-theme-primary text-center">
         <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-theme-primary">
           Ready to Start Your Journey?
@@ -377,9 +338,9 @@ export default function LandingPage() {
         </p>
         <Link
           to="/register"
-          className="px-12 py-4 text-2xl font-extrabold text-white 
+          className="w-full sm:w-auto px-12 py-4 text-xl sm:text-2xl font-extrabold text-white 
                      bg-cyan-600 rounded-lg 
-                     shadow-lg shadow-cyan-600/50 transform transition duration-300 hover:scale-[1.05] hover:bg-cyan-700"
+                     shadow-lg shadow-cyan-600/50 transform transition duration-300 hover:scale-[1.05] hover:bg-cyan-700 inline-block"
         >
           Enroll Now and Get Started
         </Link>
@@ -387,11 +348,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-// Simple reusable component for the stat pillars (moved from inline for clarity)
-const StatPillar: React.FC<{ value: string, label: string }> = ({ value, label }) => (
-    <div className="p-4">
-        <h3 className="text-5xl font-extrabold text-cyan-600 dark:text-cyan-400 mb-2">{value}</h3>
-        <p className="text-lg text-theme-primary font-semibold">{label}</p>
-    </div>
-);

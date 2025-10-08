@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import type { IconType } from 'react-icons';
 import GenericTable  from './tables/GenericTable'; 
-import type { GenericTableProps, Column, SortOrder } from './tables/GenericTable'; // Imported Column type
+import type { GenericTableProps, Column, SortOrder } from './tables/GenericTable'; 
 
 type ActiveSection = 'students' | 'courses' | 'enrollments' | 'recent';
 
@@ -23,7 +23,6 @@ interface Enrollment {
 interface ContentProps {
   section: ActiveSection;
   
-  // Student Props
   students: Student[];
   loadingStudents: boolean;
   studentTotal: number;
@@ -31,7 +30,6 @@ interface ContentProps {
   studentPage: number;
   setStudentPage: (page: number) => void;
   studentSearch: string;
-  // CORRECTED TYPE: setSearch takes a string and returns void
   setStudentSearch: (search: string) => void; 
   studentSortField: string;
   studentSortOrder: SortOrder;
@@ -40,7 +38,6 @@ interface ContentProps {
   handleDeleteStudent: (id: number) => void;
   setIsCreatingStudent: (isCreating: boolean) => void;
 
-  // Course Props
   courses: Course[];
   loadingCourses: boolean;
   courseTotal: number;
@@ -48,7 +45,6 @@ interface ContentProps {
   coursePage: number;
   setCoursePage: (page: number) => void;
   courseSearch: string;
-  // CORRECTED TYPE: setSearch takes a string and returns void
   setCourseSearch: (search: string) => void;
   courseSortField: string;
   courseSortOrder: SortOrder;
@@ -57,16 +53,13 @@ interface ContentProps {
   handleDeleteCourse: (id: number) => void;
   setIsCreatingCourse: (isCreating: boolean) => void;
 
-  // Enrollment Props
   enrollments: Enrollment[];
   loadingEnrollments: boolean;
   enrollmentSearch: string;
-  // CORRECTED TYPE: setSearch takes a string and returns void
   setEnrollmentSearch: (search: string) => void;
   handleDeleteEnrollment: (id: number) => void;
   deleteEnrollmentMutation: { isPending: boolean };
 
-  // Recent/Icons
   recentStudents: Student[];
   recentCourses: Course[];
   FaPlus: IconType;
@@ -87,7 +80,6 @@ const Content: React.FC<ContentProps> = (props) => {
     recentStudents, recentCourses
   } = props;
 
-  // --- Enrollment Filter Logic ---
   const filteredEnrollments = useMemo(() => {
     return props.enrollments.filter(e => 
       e.course?.title?.toLowerCase().includes(props.enrollmentSearch.toLowerCase()) || 
@@ -97,7 +89,6 @@ const Content: React.FC<ContentProps> = (props) => {
     );
   }, [props.enrollments, props.enrollmentSearch]);
 
-  // --- Column Definitions: Students ---
   const studentColumns: Column<Student>[] = useMemo(() => [
     { key: 'id', header: 'ID', isSortable: true, render: (s) => s.id },
     { key: 'name', header: 'Name', isSortable: true, render: (s) => <span className="font-medium">{s.name}</span> },
@@ -111,11 +102,9 @@ const Content: React.FC<ContentProps> = (props) => {
     )},
   ], [props.handleEditStudent, props.handleDeleteStudent]);
 
-  // --- Column Definitions: Courses ---
   const courseColumns: Column<Course>[] = useMemo(() => [
     { key: 'id', header: 'ID', isSortable: true, render: (c) => c.id },
     { key: 'title', header: 'Title', isSortable: true, render: (c) => <span className="font-semibold">{c.title}</span> },
-    // Use a key that exists on Course, even if the render function uses substrings
     { key: 'description', header: 'Description', isSortable: false, render: (c) => c.description.substring(0, 50) + '...' },
     { key: 'duration', header: 'Duration (hrs)', isSortable: true, render: (c) => `${c.duration} hrs` },
     { key: 'category', header: 'Category', isSortable: true, render: (c) => c.category },
@@ -127,13 +116,7 @@ const Content: React.FC<ContentProps> = (props) => {
     )},
   ], [props.handleEditCourse, props.handleDeleteCourse]);
 
-  // --- Column Definitions: Enrollments ---
-  // We use type assertion (as Column<Enrollment>[]) here to tell TypeScript that while 
-  // 'courseTitle', 'studentName', and 'studentEmail' aren't keys of Enrollment, 
-  // GenericTable can handle them as synthetic columns. 
-  // We must define these keys explicitly if GenericTable's Column type only allows 'keyof T' | 'actions'.
-  // Assuming 'GenericTable' can handle synthetic keys when 'isSortable: false', 
-  // we cast the array to the correct type to satisfy the compiler.
+ 
   const enrollmentColumns = useMemo(() => [
     { key: 'id', header: 'ID', isSortable: false, render: (e: Enrollment) => e.id },
     { key: 'courseTitle', header: 'Course Title', isSortable: false, render: (e: Enrollment) => e.course?.title || `ID: ${e.courseId}` },
@@ -152,7 +135,6 @@ const Content: React.FC<ContentProps> = (props) => {
   ], [props.handleDeleteEnrollment, props.deleteEnrollmentMutation.isPending]) as Column<Enrollment>[];
 
 
-  // --- Render Switch ---
   switch (section) {
     case 'students':
       return (
@@ -168,7 +150,6 @@ const Content: React.FC<ContentProps> = (props) => {
             page={props.studentPage}
             setPage={props.setStudentPage}
             search={props.studentSearch}
-            // NO CASTING NEEDED due to ContentProps update
             setSearch={props.setStudentSearch} 
             searchPlaceholder="Search students by name or email..."
 
@@ -199,7 +180,6 @@ const Content: React.FC<ContentProps> = (props) => {
             page={props.coursePage}
             setPage={props.setCoursePage}
             search={props.courseSearch}
-            // NO CASTING NEEDED due to ContentProps update
             setSearch={props.setCourseSearch}
             searchPlaceholder="Search courses by title or category..."
 
@@ -229,7 +209,6 @@ const Content: React.FC<ContentProps> = (props) => {
             page={1} limit={100} setPage={undefined}
 
             search={props.enrollmentSearch}
-            // NO CASTING NEEDED due to ContentProps update
             setSearch={props.setEnrollmentSearch}
             searchPlaceholder="Search enrollments..."
 
