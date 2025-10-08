@@ -1,73 +1,220 @@
-# React + TypeScript + Vite
+# 🎓 Student Learning Platform (WEEK2-TASK)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack **Role-Based Access and Management System** built with **React (TypeScript)**, **React Query**, and **JWT Authentication**, featuring dashboards for **Students**, **Teachers**, and **Admins**.  
+Includes **secure login**, **CRUD operations**, **analytics dashboards**, and **responsive UI** with **Tailwind CSS** and **theme switching**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📁 Folder Structure
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+frontend/
+│
+├── public/
+│   └── index.html
+│
+├── src/
+│   ├── api/
+│   │   ├── axiosClient.ts
+│   │   ├── axiosCourseClient.ts
+│   │   ├── courseService.ts
+│   │   └── userService.ts
+│   │
+│   ├── assets/
+│   │   ├── image.png
+│   │   ├── image (1).png
+│   │   └── react.svg
+│   │
+│   ├── components/
+│   │   ├── forms/
+│   │   ├── tables/
+│   │   ├── Content.tsx
+│   │   ├── InputField.tsx
+│   │   ├── Modal.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── ProtectedRoute.tsx
+│   │   ├── PublicRoute.tsx
+│   │   └── Sidebar.tsx
+│   │
+│   ├── context/
+│   │   ├── AuthContext.tsx
+│   │   └── ThemeContext.tsx
+│   │
+│   ├── pages/
+│   │   ├── ContactPage.tsx
+│   │   ├── DashboardAdmin.tsx
+│   │   ├── DashboardStudent.tsx
+│   │   ├── DashboardTeacher.tsx
+│   │   ├── LandingPage.tsx
+│   │   ├── Login.tsx
+│   │   ├── Register.tsx
+│   │   └── SplitScreenLayout.tsx
+│   │
+│   ├── routes/
+│   │   └── AppRoutes.tsx
+│   │
+│   ├── utils/
+│   │   ├── authUtils.ts
+│   │   ├── toast.ts
+│   │   ├── App.css
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── index.css
+│
+├── .gitignore
+├── eslint.config.js
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚀 Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 🔐 Authentication & Role-Based Access
+- JWT-based authentication using **httpOnly cookies** and **refresh token flow**.
+- Secure role-based routing via **React Router v6**.
+- User roles:  
+  - **Student:** View personal profile & enrolled courses  
+  - **Teacher:** Manage students (CRUD)  
+  - **Admin:** View analytics and manage teachers  
+
+---
+
+### 🧑‍🏫 Task 2 – Student Management (Teacher)
+- `/students` API integrated with **React Query** for CRUD operations.
+- **Student Table** with:
+  - Pagination  
+  - Filtering & Sorting  
+  - Search bar  
+- Built using **React Hook Form** + **Yup** for validation.
+- Includes **modals** for edit/delete confirmations.
+- **Toast notifications** for all actions.
+
+---
+
+### 📊 Task 3 – Analytics & Teacher Management (Admin)
+- **Analytics Dashboard** with:
+  - Recharts visualizations (students by age, per teacher, totals)
+  - Summary metric cards
+  - Recent student enrollments
+- **Teacher Management** with CRUD operations via `/teachers` API.
+- Specialization filters and modals for editing/deleting teachers.
+
+---
+
+### 💻 Task 4 – UX, Responsiveness & Advanced Features
+- Fully responsive with **Tailwind CSS**.
+- **Theme switching** (Light/Dark) using **local storage** persistence.
+- **Accessible UI** with ARIA roles and keyboard navigation.
+- Advanced search and filter functionality for both students and teachers.
+
+---
+
+## ⚙️ Tech Stack
+
+| Category | Technology |
+|-----------|-------------|
+| Frontend | React (TypeScript), React Router v6 |
+| State/Data | React Query |
+| Styling | Tailwind CSS |
+| Charts | Recharts |
+| Validation | React Hook Form + Yup |
+| Notifications | React Toastify |
+| Auth | JWT (Access + Refresh Tokens) |
+| API Handling | Axios |
+| Code Quality | ESLint + Prettier |
+
+---
+
+## 🧩 Environment Setup
+
+### 1️⃣ Clone Repository
+```bash
+git clone https://github.com/Vishal-V-D/Week3-prime-internship-task.git
+cd frontend
 ```
+
+### 2️⃣ Install Dependencies
+```bash
+npm install
+```
+
+### 3️⃣ Run Development Server
+```bash
+npm run dev
+```
+
+### 4️⃣ Build for Production
+```bash
+npm run build
+```
+
+---
+
+## 🔑 Environment Variables
+
+Create a `.env` file in the project root:
+
+```
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+---
+
+## 🧠 Key Components
+
+| Component | Description |
+|------------|--------------|
+| `AuthContext.tsx` | Manages authentication state, login, logout |
+| `ThemeContext.tsx` | Handles dark/light mode toggling |
+| `ProtectedRoute.tsx` | Restricts route access by role |
+| `DashboardAdmin.tsx` | Displays analytics & teacher management |
+| `DashboardTeacher.tsx` | Manages students list with CRUD |
+| `DashboardStudent.tsx` | Shows personal info & enrolled courses |
+| `Modal.tsx` | Confirmation dialogs |
+| `Toast.ts` | Notification utilities |
+| `AppRoutes.tsx` | Handles route configuration per role |
+
+---
+
+## 📷 Screens (Optional)
+If you want to include screenshots:
+```
+/assets
+├── login.png
+├── dashboard-admin.png
+├── dashboard-teacher.png
+└── dashboard-student.png
+```
+
+---
+
+## 🧾 Future Improvements
+- Add pagination for teacher management.
+- Role-based analytics export (CSV / PDF).
+- Implement two-factor authentication (2FA).
+- Integrate with backend using WebSockets for real-time updates.
+
+---
+
+## 👨‍💻 Author
+**Vishal V D**  
+Frontend Developer • Passionate about React, TypeScript, and scalable UI design.
+
+GitHub: [Vishal-V-D](https://github.com/Vishal-V-D)  
+Repository: [Week3-prime-internship-task](https://github.com/Vishal-V-D/Week3-prime-internship-task)
+
+---
+
+## 🪪 License
+This project is licensed under the **MIT License** – feel free to use and modify it.
+
+---
+
+## 🌟 Acknowledgements
+- [React Query Docs](https://tanstack.com/query/latest)
+- [Recharts](https://recharts.org/en-US/)
+- [React Hook Form](https://react-hook-form.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
