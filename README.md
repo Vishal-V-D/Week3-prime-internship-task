@@ -191,7 +191,7 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
 
 ## 🧾 Future Improvements
-- Add pagination for teacher management.
+
 - Role-based analytics export (CSV / PDF).
 - Implement two-factor authentication (2FA).
 - Integrate with backend using WebSockets for real-time updates.
