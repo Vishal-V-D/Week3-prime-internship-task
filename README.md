@@ -158,7 +158,9 @@ npm run build
 Create a `.env` file in the project root:
 
 ```
-VITE_API_BASE_URL=http://localhost:5000/api
+VITE_API_BASE_URL1=http://localhost:5000
+VITE_API_BASE_URL2=http://localhost:4000/api
+v
 ```
 
 ---
