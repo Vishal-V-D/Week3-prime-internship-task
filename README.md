@@ -179,17 +179,16 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
 ---
 
-## 📷 Screens (Optional)
-If you want to include screenshots:
-```
-/assets
-├── login.png
-├── dashboard-admin.png
-├── dashboard-teacher.png
-└── dashboard-student.png
-```
+## 📷 Screens 
+<img width="1918" height="912" alt="image" src="https://github.com/user-attachments/assets/fa195914-dc3e-4a53-9e19-b6e34e867eb1" />
+<img width="1914" height="906" alt="image" src="https://github.com/user-attachments/assets/dccee072-e902-47a7-8f1f-2648b589e5b9" />
+<img width="1919" height="925" alt="image" src="https://github.com/user-attachments/assets/dd046a85-e926-4672-bba3-874f1364731c" />
+<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/de861742-47c7-41cf-96af-d88f8efef5cc" />
+<img width="1919" height="905" alt="image" src="https://github.com/user-attachments/assets/7dfa0619-44f1-4518-a10b-956c8077a2bf" />
 
----
+
+
+
 
 ## 🧾 Future Improvements
 - Add pagination for teacher management.
